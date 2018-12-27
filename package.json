@@ -12,9 +12,10 @@
     "module": "dist/annotation.mjs",
     "source": "src/Annotation.tsx",
     "peerDependencies": {
-        "react": ">= 16.7.0 < 17",
-        "d3-hierarchy": "",
-        "d3-shape": ""
+        "react": ">= 16.0.0",
+        "react-dom": ">= 16.0.0",
+        "d3-hierarchy": ">= 1.0.0",
+        "d3-shape": ">= 1.0.0"
     },
     "devDependencies": {
         "@types/jest": "^23.3.10",

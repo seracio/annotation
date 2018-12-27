@@ -8,7 +8,7 @@ Annotations have became really importants for data visualization. This React com
 
 ## Install
 
-This module has 3 peer dependencies:
+This module has 4 peer dependencies:
 
 ```bash
 npm i d3-hierarchy d3-shape react react-dom @seracio/annotation
