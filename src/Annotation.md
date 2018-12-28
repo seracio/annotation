@@ -1,3 +1,7 @@
+## Annotation
+
+here is a very basic example:
+
 ```js
 const size = 500;
 const data = [
@@ -28,11 +32,12 @@ const data = [
 ];
 
 <svg
-    width={size}
-    height={size}
+    preserveAspectRatio="xMidYMid meet"
+    viewBox={`0 0 ${size} ${size}`}
     style={{
         border: 'solid 1px #ccc',
-        fontFamily: 'sans-serif'
+        fontFamily: 'sans-serif',
+        width: '100%'
     }}
 >
     {/** draw all your points */}
