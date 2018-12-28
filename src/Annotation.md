@@ -6,28 +6,24 @@ here is a very basic example:
 const size = 500;
 const data = [
     {
-        color: 'red',
-        position: [200, 50],
-        label: 'red point',
-        radius: 10
+        color: 'black',
+        position: [250, 50],
+        radius: 7
     },
     {
-        color: 'green',
-        position: [200, 200],
-        label: 'green point',
-        radius: 10
+        color: 'black',
+        position: [250, 200],
+        radius: 7
     },
     {
-        color: 'orange',
-        position: [400, 350],
-        label: 'orange point #1',
-        radius: 10
+        color: 'black',
+        position: [240, 350],
+        radius: 7
     },
     {
-        color: 'orange',
-        position: [410, 380],
-        label: 'orange point #2',
-        radius: 10
+        color: 'black',
+        position: [260, 380],
+        radius: 7
     }
 ];
 
@@ -52,12 +48,7 @@ const data = [
     ))}
 
     {/** you can annotate a single point */}
-    <Annotation
-        dx={-40}
-        dy={45}
-        label={data[0].label}
-        labelStyle={{ fontSize: '15px' }}
-    >
+    <Annotation dx={30} dy={35} label={'You can annotate a single point'}>
         {/** this shape will not be displayed, it is just to specify the size 
                  of the item you want to annotate */}
         <circle
@@ -67,15 +58,24 @@ const data = [
         />
     </Annotation>
 
-    {/** the Annotation component will enclose all its children shapes  */}
     <Annotation
-        dx={0}
-        dy={-50}
-        label="orange dots"
-        labelStyle={{ fontSize: '15px' }}
+        dx={15}
+        label={'You can also customize styles'}
+        labelStyle={{ fill: 'red', textTransform: 'uppercase' }}
+        circleStyle={{ stroke: 'red' }}
+        arrowStyle={{ stroke: 'red' }}
     >
+        <circle
+            cx={data[1].position[0]}
+            cy={data[1].position[1]}
+            r={data[1].radius}
+        />
+    </Annotation>
+
+    {/** the Annotation component will enclose all its children shapes  */}
+    <Annotation dx={-10} dy={-50} label="... and enclose multiple shapes">
         {data
-            .filter(d => d.color === 'orange')
+            .filter(d => d.position[1] > 300)
             .map((d, i) => (
                 <circle
                     key={i}

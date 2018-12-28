@@ -124,7 +124,14 @@ const Annotation = ({
                     orient="auto"
                     markerUnits="strokeWidth"
                 >
-                    <path d="M0,0 L0,6 L9,3 z" fill="#161616" />
+                    <path
+                        d="M0,0 L0,6 L9,3 z"
+                        fill={
+                            'stroke' in arrowStyle
+                                ? arrowStyle.stroke
+                                : '#161616'
+                        }
+                    />
                 </marker>
             </defs>
             {/** */}
