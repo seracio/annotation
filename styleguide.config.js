@@ -1,6 +1,6 @@
 module.exports = {
     components: 'src/Annotation.tsx',
-    styleguideDir: 'doc',
+    styleguideDir: 'docs',
     webpackConfig: {
         resolve: {
             // Add `.ts` and `.tsx` as a resolvable extension.
