@@ -6,7 +6,9 @@
 
 ## Disclaimer
 
-Annotations have become really importants for data visualization. This React component allows you to easily create small annotations in SVG charts. It is not as powerfull as the great [`react-annotation`](https://react-annotation.susielu.com/) by Susie Lu but can be useful in basic use-cases (which represents 95% of mines).
+Annotations have become really importants for data visualization those days. This React component allows you to easily create small annotations in SVG charts. It is not as powerfull as the great [react-annotation](https://react-annotation.susielu.com/) by Susie Lu but is way more simple.
+
+It is a single component which analyzes its children (only circles for now), build an enclosing circle, and then properly places an arrow connetor to link the given label and its coordinates (relatives to the previously computed enclosing circle).
 
 ## Install
 
@@ -16,7 +18,7 @@ This module has 4 peer dependencies:
 npm i d3-hierarchy d3-shape react react-dom @seracio/annotation
 ```
 
-## Usage
+## Basic usage
 
 ```jsx
 import React from 'react';
@@ -112,6 +114,8 @@ render(
 
 ## API
 
+### Props
+
 ```typescript
 type AnnotationProps = {
     children: any;
@@ -124,6 +128,8 @@ type AnnotationProps = {
     circleCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
 };
 
+### And default props
+
 Annotation.defaultProps = {
     label: '',
     dx: 0,
@@ -135,9 +141,8 @@ Annotation.defaultProps = {
 };
 ```
 
-## TODO
+## Caveats
 
--   support rects as children
--   manage a props `type` to get a rectangular or circular enclosing shape
--   customize the arrow connector
--   manage canvas
+-   It only supports circles as children right now (rects coming soon)
+-   No multi lines
+-   Only enclosing circles (rectangles could be great)
