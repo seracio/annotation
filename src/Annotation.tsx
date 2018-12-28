@@ -18,20 +18,20 @@ function mean(arr) {
 }
 
 type Props = {
-    label: string;
-    dx: number;
-    dy: number;
-    arrowStyle: any;
-    circleStyle: any;
-    labelStyle: any;
-    circleCardinal: 'n' | 's' | 'w' | 'e' | 'auto';
+    label?: string;
+    dx?: number;
+    dy?: number;
+    arrowStyle?: any;
+    circleStyle?: any;
+    labelStyle?: any;
+    circleCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
     children: any;
 };
 
 const Annotation = ({
-    label,
-    dx,
-    dy,
+    label = '',
+    dx = 0,
+    dy = 0,
     arrowStyle = {},
     circleStyle = {},
     labelStyle = {},
