@@ -6,7 +6,7 @@
         "annotations",
         "svg"
     ],
-    "version": "0.1.0",
+    "version": "0.2.0",
     "main": "dist/annotation.js",
     "umd:main": "dist/annotation.umd.js",
     "module": "dist/annotation.mjs",
