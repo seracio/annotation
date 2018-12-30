@@ -146,3 +146,9 @@ Annotation.defaultProps = {
 -   It only supports circles as children right now (rects coming soon)
 -   No multi lines
 -   Only enclosing circles (rectangles could be great)
+-   This library does not support transform attributes on  children
+
+## FAQ
+
+-   Why only supporting rects and circles as children?
+-   What is the best workflow with this component?
