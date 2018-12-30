@@ -1,6 +1,4 @@
-## Annotation
-
-here is a very basic example:
+### Readme example
 
 ```js
 const size = 500;
@@ -61,6 +59,7 @@ const data = [
     <Annotation
         dx={15}
         label={'You can also customize styles'}
+        enclosingType="rect"
         labelStyle={{ fill: 'red', textTransform: 'uppercase' }}
         enclosingStyle={{ stroke: 'red' }}
         arrowStyle={{ stroke: 'red' }}

@@ -8,14 +8,20 @@
 
 Annotations have become really importants for data visualization those days. This React component allows you to easily create small annotations in SVG charts. It is not as powerfull as the great [react-annotation](https://react-annotation.susielu.com/) by Susie Lu but is way more simple.
 
-It is a single component which analyzes its children (only circles for now), build an enclosing circle, and then properly places an arrow connetor to link the given label and its coordinates (relatives to the previously computed enclosing circle).
+## Paradigm
+
+It is a single component which analyzes its children (only circles and rects are supported), builds an **enclosing shape** (circle or rect), and then properly places an **arrow connetor** to link **the given label** and its coordinates (relatives to the previously computed enclosing shape).
+
+-   The children are not rendered, there are only a convenient way to specify the boundaries of the enclosing shape.
+-   This is why children are only rects and circles... They act as basic bounding boxes to target the data you want to annotate. For instance, if you want to annotate a complex shape (let's say a country path), you'll have to compute first the bouding box and then give it as child of the Annotation component.
 
 ## Install
 
 This module has 4 peer dependencies:
 
 ```bash
-npm i d3-hierarchy d3-shape react react-dom @seracio/annotation
+npm i d3-hierarchy d3-shape react react-dom # peer dependencies
+npm i @seracio/annotation
 ```
 
 ## Basic usage
@@ -84,6 +90,7 @@ render(
         <Annotation
             dx={15}
             label={'You can also customize styles'}
+            enclosingType="rect"
             labelStyle={{ fill: 'red', textTransform: 'uppercase' }}
             circleStyle={{ stroke: 'red' }}
             arrowStyle={{ stroke: 'red' }}
@@ -118,37 +125,35 @@ render(
 
 ```typescript
 type AnnotationProps = {
-    children: any;
     label?: string;
     dx?: number;
     dy?: number;
+    enclosingType?: 'circle' | 'rect';
     arrowStyle?: any;
-    circleStyle?: any;
+    enclosingStyle?: any;
     labelStyle?: any;
-    circleCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
+    enclosingCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
+    children: any;
 };
+```
 
 ### And default props
 
+```typescript
 Annotation.defaultProps = {
-    label: '',
-    dx: 0,
-    dy: 0,
-    arrowStyle: {},
-    circleStyle: {},
-    labelStyle: {},
-    circleCardinal: 'auto'
+    label = '',
+    dx = 0,
+    dy = 0,
+    enclosingType = 'circle',
+    enclosingCardinal = 'auto',
+    enclosingStyle = {},
+    arrowStyle = {},
+    labelStyle = {},
+    children
 };
 ```
 
 ## Caveats
 
--   It only supports circles as children right now (rects coming soon)
 -   No multi lines
--   Only enclosing circles (rectangles could be great)
--   This library does not support transform attributes on  children
-
-## FAQ
-
--   Why only supporting rects and circles as children?
--   What is the best workflow with this component?
+-   This library does not support transform attributes on children

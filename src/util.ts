@@ -99,10 +99,7 @@ function computeEnclosing(circles, type) {
 
 function computeEnclosingRect(circles) {
     const bbox = circles
-        .map(s => [
-            [s.x - s.r / 2, s.y - s.r / 2],
-            [s.x + s.r / 2, s.y + s.r / 2]
-        ])
+        .map(s => [[s.x - s.r, s.y - s.r], [s.x + s.r, s.y + s.r]])
         .reduce((acc, cur) => {
             if (acc.length === 0) {
                 return cur;
