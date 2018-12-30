@@ -1,3 +1,5 @@
+import { packEnclose } from 'd3-hierarchy';
+
 function firstBy(arr, func) {
     return [...arr].sort(func)[0];
 }
@@ -56,4 +58,131 @@ function transformChildrenShapesAsCircles(
     );
 }
 
-export { firstBy, distance, mean, transformChildrenShapesAsCircles };
+function findControlPoint(
+    selectedEnclosingCardinalPoint,
+    labelPoint,
+    enclosing,
+    type
+) {
+    const x =
+        type === 'circle' ? enclosing.x : enclosing.x + enclosing.width / 2;
+    // trivial cases: straight line
+    if (selectedEnclosingCardinalPoint[0] === labelPoint[0]) {
+        return [
+            selectedEnclosingCardinalPoint[0],
+            mean([selectedEnclosingCardinalPoint[1], labelPoint[1]])
+        ];
+    }
+    // trivial cases: straight line
+    else if (selectedEnclosingCardinalPoint[1] === labelPoint[1]) {
+        return [
+            mean([selectedEnclosingCardinalPoint[0], labelPoint[0]]),
+            selectedEnclosingCardinalPoint[1]
+        ];
+    }
+    //
+    else if (selectedEnclosingCardinalPoint[0] === x) {
+        return [selectedEnclosingCardinalPoint[0], labelPoint[1]];
+    }
+    //
+    else {
+        return [labelPoint[0], selectedEnclosingCardinalPoint[1]];
+    }
+}
+
+function computeEnclosing(circles, type) {
+    if (type === 'circe') {
+        return packEnclose(circles);
+    }
+    return computeEnclosingRect(circles);
+}
+
+function computeEnclosingRect(circles) {
+    const bbox = circles
+        .map(s => [
+            [s.x - s.r / 2, s.y - s.r / 2],
+            [s.x + s.r / 2, s.y + s.r / 2]
+        ])
+        .reduce((acc, cur) => {
+            if (acc.length === 0) {
+                return cur;
+            }
+            return [
+                [Math.min(acc[0][0], cur[0]), Math.min(acc[0][1], cur[1])],
+                [Math.max(acc[1][0], cur[0]), Math.max(acc[1][1], cur[1])]
+            ];
+        }, []);
+    return {
+        x: bbox[0][0],
+        y: bbox[0][1],
+        width: Math.abs(bbox[1][0] - bbox[0][0]),
+        height: Math.abs(bbox[1][1] - bbox[0][1])
+    };
+}
+
+function computeEnclosingCirleCardinalPoints(enclosing) {
+    const { x, y, r } = enclosing;
+
+    const enclosingCardinalPoints = {
+        n: [x, y - r],
+        s: [x, y + r],
+        w: [x - r, y],
+        e: [x + r, y]
+    };
+
+    return enclosingCardinalPoints;
+}
+
+function computeEnclosingRectCardinalPoints(enclosing) {
+    const { x, y, width, height } = enclosing;
+
+    const enclosingCardinalPoints = {
+        n: [x + width / 2, y],
+        s: [x + width / 2, y + height],
+        w: [x, y + height / 2],
+        e: [x + width, y + height / 2]
+    };
+
+    return enclosingCardinalPoints;
+}
+
+function computeEnclosingCardinalPoint(
+    enclosing,
+    enclosingCardinal,
+    dx,
+    dy,
+    type
+) {
+    const pointsByCardinal =
+        type === 'circle'
+            ? computeEnclosingCirleCardinalPoints(enclosing)
+            : computeEnclosingRectCardinalPoints(enclosing);
+
+    const { x, y } =
+        type === 'circle'
+            ? enclosing
+            : {
+                  x: enclosing.x + enclosing.width / 2,
+                  y: enclosing.y + enclosing.height / 2
+              };
+    const auto = firstBy(
+        [
+            pointsByCardinal.n,
+            pointsByCardinal.s,
+            pointsByCardinal.w,
+            pointsByCardinal.e
+        ],
+        (a, b) => distance(a, [x + dx, y + dy]) - distance(b, [x + dx, y + dy])
+    );
+    return pointsByCardinal[enclosingCardinal] || auto;
+}
+
+export {
+    firstBy,
+    distance,
+    mean,
+    transformChildrenShapesAsCircles,
+    findControlPoint,
+    computeEnclosing,
+    computeEnclosingCardinalPoint
+};

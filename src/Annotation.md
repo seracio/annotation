@@ -62,7 +62,7 @@ const data = [
         dx={15}
         label={'You can also customize styles'}
         labelStyle={{ fill: 'red', textTransform: 'uppercase' }}
-        circleStyle={{ stroke: 'red' }}
+        enclosingStyle={{ stroke: 'red' }}
         arrowStyle={{ stroke: 'red' }}
     >
         <circle
