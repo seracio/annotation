@@ -1,30 +1,21 @@
-import { packEnclose } from 'd3-hierarchy';
 import { line, curveBasis } from 'd3-shape';
 import React from 'react';
-
-// helpers
-function firstBy(arr, func) {
-    return [...arr].sort(func)[0];
-}
-
-function distance(pt1, pt2) {
-    return Math.sqrt(
-        Math.pow(pt2[0] - pt1[0], 2) + Math.pow(pt2[1] - pt1[1], 2)
-    );
-}
-
-function mean(arr) {
-    return arr.reduce((sum, current) => sum + current, 0) / arr.length;
-}
+import {
+    transformChildrenShapesAsCircles,
+    findControlPoint,
+    computeEnclosing,
+    computeEnclosingCardinalPoint
+} from './util';
 
 type Props = {
     label?: string;
     dx?: number;
     dy?: number;
+    enclosingType?: 'circle' | 'rect';
     arrowStyle?: any;
-    circleStyle?: any;
+    enclosingStyle?: any;
     labelStyle?: any;
-    circleCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
+    enclosingCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
     children: any;
 };
 
@@ -32,73 +23,46 @@ const Annotation = ({
     label = '',
     dx = 0,
     dy = 0,
+    enclosingType = 'circle',
+    enclosingCardinal = 'auto',
     arrowStyle = {},
-    circleStyle = {},
+    enclosingStyle = {},
     labelStyle = {},
-    circleCardinal = 'auto',
     children
 }: Props) => {
     // get a random id for the defs ids
     const defsId: string = '' + Math.random() * new Date().getTime();
 
-    // retrieve points from the children (circles only currently)
-    const points = React.Children.toArray(children)
-        .filter((d: any) => d.type === 'circle')
-        .map((d: any) => ({
-            r: parseFloat(d.props.r) + 2,
-            x: d.props.cx ? parseFloat(d.props.cx) : 0,
-            y: d.props.cy ? parseFloat(d.props.cy) : 0
-        }));
+    // transform all children shapes as points circles
+    const points = transformChildrenShapesAsCircles(
+        React.Children.toArray(children)
+    );
 
-    // retrieve enlosing circle
-    const { x, y, r } = packEnclose(points);
+    // retrieve enlosing shape
+    const enclosing = computeEnclosing(points, enclosingType);
 
     // cardinal point of the enclosing circle:
-    const circleCardinalPoints = {
-        n: [x, y - r],
-        s: [x, y + r],
-        w: [x - r, y],
-        e: [x + r, y],
-        // find the closest points from [dx, dy]
-        auto: firstBy(
-            [[x, y - r], [x, y + r], [x - r, y], [x + r, y]],
-            (a, b) =>
-                distance(a, [x + dx, y + dy]) - distance(b, [x + dx, y + dy])
-        )
-    };
-    const selectedCircleCardinalPoint = circleCardinalPoints[circleCardinal];
+    const selectedEnclosingCardinalPoint = computeEnclosingCardinalPoint(
+        enclosing,
+        enclosingCardinal,
+        dx,
+        dy,
+        enclosingType
+    );
 
     // compute the label center
     const labelPoint = [
-        selectedCircleCardinalPoint[0] + dx,
-        selectedCircleCardinalPoint[1] + dy
+        selectedEnclosingCardinalPoint[0] + dx,
+        selectedEnclosingCardinalPoint[1] + dy
     ];
 
     // find the best control point
-    let controlPoint = (function() {
-        // trivial cases: straight line
-        if (selectedCircleCardinalPoint[0] === labelPoint[0]) {
-            return [
-                selectedCircleCardinalPoint[0],
-                mean([selectedCircleCardinalPoint[1], labelPoint[1]])
-            ];
-        }
-        // trivial cases: straight line
-        else if (selectedCircleCardinalPoint[1] === labelPoint[1]) {
-            return [
-                mean([selectedCircleCardinalPoint[0], labelPoint[0]]),
-                selectedCircleCardinalPoint[1]
-            ];
-        }
-        //
-        else if (selectedCircleCardinalPoint[0] === x) {
-            return [selectedCircleCardinalPoint[0], labelPoint[1]];
-        }
-        //
-        else {
-            return [labelPoint[0], selectedCircleCardinalPoint[1]];
-        }
-    })();
+    let controlPoint = findControlPoint(
+        selectedEnclosingCardinalPoint,
+        labelPoint,
+        enclosing,
+        enclosingType
+    );
 
     // find the cardinal point of the label
     const labelCardinalPointType =
@@ -139,7 +103,7 @@ const Annotation = ({
                 d={line().curve(curveBasis)([
                     labelPoint,
                     controlPoint,
-                    selectedCircleCardinalPoint
+                    selectedEnclosingCardinalPoint
                 ])}
                 style={{
                     fill: 'none',
@@ -149,17 +113,32 @@ const Annotation = ({
                 }}
                 markerEnd={`url(#${defsId})`}
             />
-            <circle
-                cx={x}
-                cy={y}
-                r={r}
-                style={{
-                    fill: 'none',
-                    stroke: '#161616',
-                    strokeWidth: 1,
-                    ...circleStyle
-                }}
-            />
+            {enclosingType === 'circle' ? (
+                <circle
+                    cx={enclosing.x}
+                    cy={enclosing.y}
+                    r={enclosing.r}
+                    style={{
+                        fill: 'none',
+                        stroke: '#161616',
+                        strokeWidth: 1,
+                        ...enclosingStyle
+                    }}
+                />
+            ) : (
+                <rect
+                    x={enclosing.x}
+                    y={enclosing.y}
+                    width={enclosing.width}
+                    height={enclosing.height}
+                    style={{
+                        fill: 'none',
+                        stroke: '#161616',
+                        strokeWidth: 1,
+                        ...enclosingStyle
+                    }}
+                />
+            )}
             <text
                 x={labelPoint[0]}
                 y={labelPoint[1]}
