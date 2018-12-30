@@ -38,8 +38,12 @@ const Annotation = ({
         React.Children.toArray(children)
     );
 
+    console.log(points);
+
     // retrieve enlosing shape
     const enclosing = computeEnclosing(points, enclosingType);
+
+    console.log(enclosing);
 
     // cardinal point of the enclosing circle:
     const selectedEnclosingCardinalPoint = computeEnclosingCardinalPoint(

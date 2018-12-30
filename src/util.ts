@@ -91,7 +91,7 @@ function findControlPoint(
 }
 
 function computeEnclosing(circles, type) {
-    if (type === 'circe') {
+    if (type === 'circle') {
         return packEnclose(circles);
     }
     return computeEnclosingRect(circles);
