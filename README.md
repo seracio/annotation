@@ -6,11 +6,11 @@
 
 ## Disclaimer
 
-Annotations have become really importants for data visualization those days. This React component allows you to easily create small annotations in SVG charts. It is not as powerfull as the great [react-annotation](https://react-annotation.susielu.com/) by Susie Lu but is way more simple.
+Annotations have become really importants for data visualization theses days. This React component allows you to easily create small annotations in SVG charts. It is not as powerfull as the great [react-annotation](https://react-annotation.susielu.com/) by Susie Lu but it is quite simple.
 
 ## Paradigm
 
-It is a single component which analyzes its children (only circles and rects are supported), builds an **enclosing shape** (circle or rect), and then properly places an **arrow connetor** to link **the given label** and its coordinates (relatives to the previously computed enclosing shape).
+It's a single component which analyzes its children (only circles and rects are supported), builds an **enclosing shape** (circle or rect), and then properly places an **arrow connetor** to link **the given label** and its coordinates (relatives to the previously computed enclosing shape).
 
 -   The children are not rendered, there are only a convenient way to specify the boundaries of the enclosing shape.
 -   This is why children are only rects and circles... They act as basic bounding boxes to target the data you want to annotate. For instance, if you want to annotate a complex shape (let's say a country path), you'll have to compute first the bouding box and then give it as child of the Annotation component.
