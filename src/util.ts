@@ -105,8 +105,8 @@ function computeEnclosingRect(circles) {
                 return cur;
             }
             return [
-                [Math.min(acc[0][0], cur[0]), Math.min(acc[0][1], cur[1])],
-                [Math.max(acc[1][0], cur[0]), Math.max(acc[1][1], cur[1])]
+                [Math.min(acc[0][0], cur[0][0]), Math.min(acc[0][1], cur[0][1])],
+                [Math.max(acc[1][0], cur[1][0]), Math.max(acc[1][1], cur[1][1])]
             ];
         }, []);
     return {
