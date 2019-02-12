@@ -7,9 +7,7 @@
         "svg"
     ],
     "version": "1.0.1",
-    "main": "dist/annotation.js",
-    "umd:main": "dist/annotation.umd.js",
-    "module": "dist/annotation.mjs",
+    "main": "dist/Annotation.js",
     "source": "src/Annotation.tsx",
     "peerDependencies": {
         "d3-hierarchy": ">= 1.0.0",
@@ -37,7 +35,7 @@
     "scripts": {
         "test": "jest",
         "prepublishOnly": "npm run build",
-        "build": "microbundle",
+        "build": "rm -rf .rts2* && rm -rf dist && microbundle -f cjs --sourcemap false",
         "dev": "microbundle watch",
         "style": "npx styleguidist server",
         "style:build": "npx styleguidist build"
