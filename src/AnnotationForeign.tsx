@@ -1,5 +1,5 @@
 import { line, curveBasis } from 'd3-shape';
-import React, { memo, useRef, useState } from 'react';
+import React, { memo } from 'react';
 import {
     transformChildrenShapesAsCircles,
     findControlPoint,
@@ -15,7 +15,7 @@ type Props = {
     arrowStyle?: any;
     enclosingStyle?: any;
     labelStyle?: any;
-    labelWidth?: number;
+    labelSize?: number;
     enclosingCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
     children: any;
 };
@@ -29,11 +29,9 @@ const AnnotationForeign = ({
     arrowStyle = {},
     enclosingStyle = {},
     labelStyle = {},
-    labelWidth = 100,
+    labelSize = 100,
     children
 }: Props) => {
-    const [foreignObjectHeight, setHeight] = useState(() => 0);
-    const foreignObjectRoot = useRef(null);
     // get a random id for the defs ids
     const defsId: string = '' + Math.random() * new Date().getTime();
 
@@ -81,7 +79,11 @@ const AnnotationForeign = ({
             : 'w';
 
     return (
-        <g>
+        <g
+            style={{
+                pointerEvents: 'none'
+            }}
+        >
             <defs>
                 <marker
                     id={`${defsId}`}
@@ -144,25 +146,57 @@ const AnnotationForeign = ({
                 />
             )}
             <foreignObject
-                x={labelPoint[0]}
-                y={labelPoint[1]}
-                width={labelWidth}
-                height={labelWidth}
+                x={
+                    {
+                        e: labelPoint[0] - labelSize,
+                        w: labelPoint[0],
+                        s: labelPoint[0] - labelSize / 2,
+                        n: labelPoint[0] - labelSize / 2
+                    }[labelCardinalPointType]
+                }
+                y={
+                    {
+                        e: labelPoint[1] - labelSize / 2,
+                        w: labelPoint[1] - labelSize / 2,
+                        s: labelPoint[1] - labelSize,
+                        n: labelPoint[1]
+                    }[labelCardinalPointType]
+                }
+                width={labelSize}
+                height={labelSize}
                 style={{
                     fontSize: '10px'
                 }}
             >
                 <div
                     style={{
-                        display: 'flex'
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent:
+                            labelCardinalPointType === 'n'
+                                ? 'flex-start'
+                                : labelCardinalPointType === 's'
+                                ? 'flex-end'
+                                : 'center'
                     }}
                 >
                     <div
                         style={{
-                            overflowWrap: 'break-word',
-                            borderLeft: 'solid 1px red',
-                            padding: '5px',
-                            boxSizing: 'border-box'
+                            ...{
+                                overflowWrap: 'break-word',
+                                padding: '5px',
+                                boxSizing: 'border-box',
+                                textAlign:
+                                    labelCardinalPointType === 'e'
+                                        ? 'right'
+                                        : labelCardinalPointType === 'w'
+                                        ? 'left'
+                                        : 'center'
+                            },
+                            ...labelStyle
                         }}
                     >
                         {label}

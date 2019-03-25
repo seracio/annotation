@@ -65,7 +65,7 @@ const data = [
         dx={15}
         label={'You can also customize styles'}
         enclosingType="rect"
-        labelStyle={{ fill: 'red', textTransform: 'uppercase' }}
+        labelStyle={{ color: 'red', textTransform: 'uppercase' }}
         enclosingStyle={{ stroke: 'red' }}
         arrowStyle={{ stroke: 'red' }}
     >
@@ -81,6 +81,23 @@ const data = [
         dx={-10}
         dy={-50}
         label="... and enclose multiple shapes"
+    >
+        {data
+            .filter(d => d.position[1] > 300)
+            .map((d, i) => (
+                <circle
+                    key={i}
+                    cx={d.position[0]}
+                    cy={d.position[1]}
+                    r={d.radius}
+                />
+            ))}
+    </AnnotationForeign>
+
+    <AnnotationForeign
+        dx={0}
+        dy={20}
+        label="this is a very long comment on multiple lines"
     >
         {data
             .filter(d => d.position[1] > 300)
