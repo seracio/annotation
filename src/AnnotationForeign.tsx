@@ -1,5 +1,5 @@
 import { line, curveBasis } from 'd3-shape';
-import React, { memo } from 'react';
+import React, { memo, useRef } from 'react';
 import {
     transformChildrenShapesAsCircles,
     findControlPoint,
