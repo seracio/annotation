@@ -1,5 +1,5 @@
 module.exports = {
-    components: 'src/Annotation.tsx',
+    components: ['src/Annotation.tsx', 'src/AnnotationForeign.tsx'],
     styleguideDir: 'docs',
     webpackConfig: {
         resolve: {
