@@ -1,5 +1,5 @@
 import { line, curveBasis } from 'd3-shape';
-import React, { memo, useRef } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import {
     transformChildrenShapesAsCircles,
     findControlPoint,
@@ -15,6 +15,7 @@ type Props = {
     arrowStyle?: any;
     enclosingStyle?: any;
     labelStyle?: any;
+    labelWidth?: number;
     enclosingCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
     children: any;
 };
@@ -28,8 +29,11 @@ const AnnotationForeign = ({
     arrowStyle = {},
     enclosingStyle = {},
     labelStyle = {},
+    labelWidth = 100,
     children
 }: Props) => {
+    const [foreignObjectHeight, setHeight] = useState(() => 0);
+    const foreignObjectRoot = useRef(null);
     // get a random id for the defs ids
     const defsId: string = '' + Math.random() * new Date().getTime();
 
@@ -142,19 +146,27 @@ const AnnotationForeign = ({
             <foreignObject
                 x={labelPoint[0]}
                 y={labelPoint[1]}
-                width={100}
-                height={50}
+                width={labelWidth}
+                height={labelWidth}
                 style={{
                     fontSize: '10px'
                 }}
             >
                 <div
                     style={{
-                        overflowWrap: 'break-word',
-                        borderLeft: 'solid 1px red'
+                        display: 'flex'
                     }}
                 >
-                    {label}
+                    <div
+                        style={{
+                            overflowWrap: 'break-word',
+                            borderLeft: 'solid 1px red',
+                            padding: '5px',
+                            boxSizing: 'border-box'
+                        }}
+                    >
+                        {label}
+                    </div>
                 </div>
             </foreignObject>
         </g>
