@@ -1,5 +1,5 @@
 import { line, curveBasis } from 'd3-shape';
-import React from 'react';
+import React, { memo } from 'react';
 import {
     transformChildrenShapesAsCircles,
     findControlPoint,
@@ -15,6 +15,7 @@ type Props = {
     arrowStyle?: any;
     enclosingStyle?: any;
     labelStyle?: any;
+    labelWidth?: number;
     enclosingCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
     children: any;
 };
@@ -28,8 +29,11 @@ const Annotation = ({
     arrowStyle = {},
     enclosingStyle = {},
     labelStyle = {},
+    labelWidth = 100,
     children
 }: Props) => {
+    const labelHeight = 500;
+
     // get a random id for the defs ids
     const defsId: string = '' + Math.random() * new Date().getTime();
 
@@ -77,7 +81,11 @@ const Annotation = ({
             : 'w';
 
     return (
-        <g>
+        <g
+            style={{
+                pointerEvents: 'none'
+            }}
+        >
             <defs>
                 <marker
                     id={`${defsId}`}
@@ -139,30 +147,66 @@ const Annotation = ({
                     }}
                 />
             )}
-            <text
-                x={labelPoint[0]}
-                y={labelPoint[1]}
+            <foreignObject
+                x={
+                    {
+                        e: labelPoint[0] - labelWidth,
+                        w: labelPoint[0],
+                        s: labelPoint[0] - labelWidth / 2,
+                        n: labelPoint[0] - labelWidth / 2
+                    }[labelCardinalPointType]
+                }
+                y={
+                    {
+                        e: labelPoint[1] - labelHeight / 2,
+                        w: labelPoint[1] - labelHeight / 2,
+                        s: labelPoint[1] - labelHeight,
+                        n: labelPoint[1]
+                    }[labelCardinalPointType]
+                }
+                width={labelWidth}
+                height={labelHeight}
                 style={{
-                    fontSize: '10px',
-                    dominantBaseline:
-                        labelCardinalPointType === 'n'
-                            ? 'hanging'
-                            : labelCardinalPointType === 's'
-                            ? 'baseline'
-                            : 'middle',
-                    textAnchor:
-                        labelCardinalPointType === 'w'
-                            ? 'start'
-                            : labelCardinalPointType === 'e'
-                            ? 'end'
-                            : 'middle',
-                    ...labelStyle
+                    fontSize: '10px'
                 }}
             >
-                {label}
-            </text>
+                <div
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent:
+                            labelCardinalPointType === 'n'
+                                ? 'flex-start'
+                                : labelCardinalPointType === 's'
+                                ? 'flex-end'
+                                : 'center'
+                    }}
+                >
+                    <div
+                        style={{
+                            ...{
+                                overflowWrap: 'break-word',
+                                padding: '5px',
+                                boxSizing: 'border-box',
+                                textAlign:
+                                    labelCardinalPointType === 'e'
+                                        ? 'right'
+                                        : labelCardinalPointType === 'w'
+                                        ? 'left'
+                                        : 'center'
+                            },
+                            ...labelStyle
+                        }}
+                    >
+                        {label}
+                    </div>
+                </div>
+            </foreignObject>
         </g>
     );
 };
 
-export default Annotation;
+export default memo(Annotation);

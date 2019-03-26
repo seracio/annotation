@@ -36,9 +36,8 @@
         "test": "jest",
         "prepublishOnly": "npm run build",
         "build": "rm -rf .rts2* && rm -rf dist && microbundle -f cjs --sourcemap false",
-        "dev": "microbundle watch",
-        "style": "npx styleguidist server",
-        "style:build": "npx styleguidist build"
+        "start": "npx styleguidist server",
+        "doc": "npx styleguidist build"
     },
     "repository": "git@github.com:seracio/annotation.git",
     "author": "nicolasmondon <nicolasmondon@gmail.com>",
