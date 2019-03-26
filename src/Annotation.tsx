@@ -188,6 +188,7 @@ const Annotation = ({
                     <div
                         style={{
                             ...{
+                                width: '100%',
                                 overflowWrap: 'break-word',
                                 padding: '5px',
                                 boxSizing: 'border-box',
