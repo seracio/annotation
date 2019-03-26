@@ -64,6 +64,7 @@ render(
             fontFamily: 'sans-serif',
             width: '100%'
         }}
+        xmlns="http://www.w3.org/2000/svg"
     >
         {/** draw all your points */}
         {data.map((d, i) => (
@@ -78,7 +79,7 @@ render(
 
         {/** you can annotate a single point */}
         <Annotation dx={30} dy={35} label={'You can annotate a single point'}>
-            {/** this shape will not be displayed, it is just to specify the size 
+            {/** this shape will not be displayed, it is just to specify the size
                  of the item you want to annotate */}
             <circle
                 cx={data[0].position[0]}
@@ -91,8 +92,8 @@ render(
             dx={15}
             label={'You can also customize styles'}
             enclosingType="rect"
-            labelStyle={{ fill: 'red', textTransform: 'uppercase' }}
-            circleStyle={{ stroke: 'red' }}
+            labelStyle={{ color: 'red', textTransform: 'uppercase' }}
+            enclosingStyle={{ stroke: 'red' }}
             arrowStyle={{ stroke: 'red' }}
         >
             <circle
@@ -104,6 +105,23 @@ render(
 
         {/** the Annotation component will enclose all its children shapes  */}
         <Annotation dx={-10} dy={-50} label="... and enclose multiple shapes">
+            {data
+                .filter(d => d.position[1] > 300)
+                .map((d, i) => (
+                    <circle
+                        key={i}
+                        cx={d.position[0]}
+                        cy={d.position[1]}
+                        r={d.radius}
+                    />
+                ))}
+        </Annotation>
+
+        <Annotation
+            dx={0}
+            dy={20}
+            label="this is a very long comment on multiple lines"
+        >
             {data
                 .filter(d => d.position[1] > 300)
                 .map((d, i) => (
@@ -132,6 +150,7 @@ type AnnotationProps = {
     arrowStyle?: any;
     enclosingStyle?: any;
     labelStyle?: any;
+    labelWidth?: number;
     enclosingCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
     children: any;
 };
@@ -149,6 +168,7 @@ Annotation.defaultProps = {
     enclosingStyle = {},
     arrowStyle = {},
     labelStyle = {},
+    labelWidth = 100,
     children
 };
 ```
