@@ -20,7 +20,7 @@ It's a single component which analyzes its children (only circles and rects are 
 This module has 4 peer dependencies:
 
 ```bash
-npm i d3-hierarchy d3-shape react react-dom # peer dependencies
+npm i d3 react react-dom # peer dependencies
 npm i @seracio/annotation
 ```
 
@@ -106,7 +106,7 @@ render(
         {/** the Annotation component will enclose all its children shapes  */}
         <Annotation dx={-10} dy={-50} label="... and enclose multiple shapes">
             {data
-                .filter(d => d.position[1] > 300)
+                .filter((d) => d.position[1] > 300)
                 .map((d, i) => (
                     <circle
                         key={i}
@@ -123,7 +123,7 @@ render(
             label="this is a very long comment on multiple lines"
         >
             {data
-                .filter(d => d.position[1] > 300)
+                .filter((d) => d.position[1] > 300)
                 .map((d, i) => (
                     <circle
                         key={i}
