@@ -1,4 +1,4 @@
-import { line, curveBasis } from 'd3-shape';
+import * as d3 from 'd3';
 import React, { memo } from 'react';
 import {
     transformChildrenShapesAsCircles,
@@ -17,6 +17,7 @@ type Props = {
     labelStyle?: any;
     labelWidth?: number;
     enclosingCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
+    curve?: Function;
     children: any;
 };
 
@@ -30,6 +31,7 @@ const Annotation = ({
     enclosingStyle = {},
     labelStyle = {},
     labelWidth = 100,
+    curve = d3.curveBasis,
     children
 }: Props) => {
     const labelHeight = 500;
@@ -108,7 +110,7 @@ const Annotation = ({
             </defs>
             {/** */}
             <path
-                d={line().curve(curveBasis)([
+                d={d3.line().curve(curve)([
                     labelPoint,
                     controlPoint,
                     selectedEnclosingCardinalPoint
