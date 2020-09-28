@@ -65,3 +65,6 @@ typings/
 
 # dist dir
 dist
+
+# yarn lock
+yarn.lock
