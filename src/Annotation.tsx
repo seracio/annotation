@@ -11,6 +11,8 @@ type Props = {
     label?: string;
     dx?: number;
     dy?: number;
+    x?: number;
+    y?: number;
     enclosingType?: 'circle' | 'rect';
     arrowStyle?: any;
     enclosingStyle?: any;
@@ -25,6 +27,8 @@ const Annotation = ({
     label = '',
     dx = 0,
     dy = 0,
+    x,
+    y,
     enclosingType = 'circle',
     enclosingCardinal = 'auto',
     arrowStyle = {},
@@ -58,8 +62,8 @@ const Annotation = ({
 
     // compute the label center
     const labelPoint = [
-        selectedEnclosingCardinalPoint[0] + dx,
-        selectedEnclosingCardinalPoint[1] + dy
+        x ?? selectedEnclosingCardinalPoint[0] + dx,
+        y ?? selectedEnclosingCardinalPoint[1] + dy
     ];
 
     // find the best control point
