@@ -1,5 +1,5 @@
-import * as d3 from 'd3';
-import React, { memo } from 'react';
+import { curveBasis, line } from 'd3-shape';
+import { Children, memo } from 'react';
 import {
     transformChildrenShapesAsCircles,
     findControlPoint,
@@ -19,7 +19,7 @@ type Props = {
     labelStyle?: any;
     labelWidth?: number;
     enclosingCardinal?: 'n' | 's' | 'w' | 'e' | 'auto';
-    curve?: Function;
+    curve?: any;
     children: any;
 };
 
@@ -35,7 +35,7 @@ const Annotation = ({
     enclosingStyle = {},
     labelStyle = {},
     labelWidth = 100,
-    curve = d3.curveBasis,
+    curve = curveBasis,
     children
 }: Props) => {
     const labelHeight = 500;
@@ -44,16 +44,14 @@ const Annotation = ({
     const defsId: string = '' + Math.random() * new Date().getTime();
 
     // transform all children shapes as points circles
-    const points = transformChildrenShapesAsCircles(
-        React.Children.toArray(children)
-    );
+    const points = transformChildrenShapesAsCircles(Children.toArray(children));
 
     // retrieve enlosing shape
     const enclosing = computeEnclosing(points, enclosingType);
 
     // cardinal point of the enclosing circle:
     const selectedEnclosingCardinalPoint = computeEnclosingCardinalPoint(
-        enclosing,
+        enclosing as any,
         enclosingCardinal,
         dx,
         dy,
@@ -69,8 +67,8 @@ const Annotation = ({
     // find the best control point
     let controlPoint = findControlPoint(
         selectedEnclosingCardinalPoint,
-        labelPoint,
-        enclosing,
+        labelPoint as any,
+        enclosing as any,
         enclosingType
     );
 
@@ -114,11 +112,13 @@ const Annotation = ({
             </defs>
             {/** */}
             <path
-                d={d3.line().curve(curve)([
-                    labelPoint,
-                    controlPoint,
-                    selectedEnclosingCardinalPoint
-                ])}
+                d={
+                    line().curve(curve)([
+                        labelPoint,
+                        controlPoint,
+                        selectedEnclosingCardinalPoint
+                    ]) as any
+                }
                 style={{
                     fill: 'none',
                     stroke: '#161616',
@@ -131,6 +131,7 @@ const Annotation = ({
                 <circle
                     cx={enclosing.x}
                     cy={enclosing.y}
+                    // @ts-ignore
                     r={enclosing.r}
                     style={{
                         fill: 'none',
@@ -143,7 +144,9 @@ const Annotation = ({
                 <rect
                     x={enclosing.x}
                     y={enclosing.y}
+                    // @ts-ignore
                     width={enclosing.width}
+                    // @ts-ignore
                     height={enclosing.height}
                     style={{
                         fill: 'none',
